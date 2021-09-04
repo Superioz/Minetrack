@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minetrack-app
+spec:
+  selector:
+    matchLabels:
+      app: minetrack-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: minetrack-app
+    spec:
+      containers:
+      - name: minetrack
+        image: superioz/minetrack:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: config-volume
+            mountPath: /usr/src/minetrack/servers.json
+            subPath: servers.json
+          - name: config-volume
+            mountPath: /usr/src/minetrack/config.json
+            subPath: config.json
+      volumes:
+        - name: config-volume
+          configMap:
+            name: minetrack-configmap
